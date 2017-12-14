@@ -18,8 +18,8 @@ def BinarySearch(array,key):
 if __name__=='__main__':
 	ls=[1,5,3,52,6,7,4,33,6,64]
 	ls.sort()
-	for i in range(0,len(ls)):
-		print '%d=>%d'%(i,ls[i])
+	for i,item in enumerate(ls):
+		print '%d=>%d'%(i,item)
 
 	key=7
 	idx=BinarySearch(ls,key)
