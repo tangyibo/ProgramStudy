@@ -1,5 +1,10 @@
-# CPP-Study CPP基础知识温习
+# Program-Study 基础知识温习
+一、内容
+(1)reflect 反射
 
-(1)reflect C++反射
+(2)algorithm 算法
 
-(2)algorithm C++算法
+二、编程语言 
+ (1) c++
+
+ (2) python
