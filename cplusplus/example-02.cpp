@@ -7,7 +7,7 @@ public:
 	{
 		printf("BaseClass::construction\n");
 	}
-	~BaseClass()
+	virtual ~BaseClass()
 	{
 		printf("BaseClass::destruction\n");
 	}
