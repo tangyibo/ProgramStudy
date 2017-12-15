@@ -63,6 +63,9 @@ int main(int argc,char *argv[])
 	std::cout<<"A* q=new D();A* q1=new D()"<<std::endl;
 	A* q=new D();
 	A* q1=new D();
+	std::cout<<"typeid(q)==typeid(D) is :"<<(typeid(q)==typeid(D))<<std::endl;
+	D *s=dynamic_cast<D *>(q);
+	std::cout<<"typeid(dynamic_cast<D *>(q))==typeid(D) is :"<<(typeid(*s)==typeid(D))<<std::endl;
 	std::cout<<"typeid(q)==typeid(q1) is :"<<(typeid(q)==typeid(q1))<<std::endl;
 	A* q2=new B();
 	std::cout<<"A* q2=new B();"<<std::endl;
