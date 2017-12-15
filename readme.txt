@@ -6,9 +6,7 @@
 
 (2)algorithm 算法
 
-(3) RTTI （Run-Time Type Identification，通过运行时类型识别）
-
-(4)4个强制类型转换
+(3) RTTI（Run-Time Type Identification，运行时类型识别）与 强制类型转换dynamic_cast
 
 #二、编程语言 
 
