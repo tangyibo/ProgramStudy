@@ -12,7 +12,7 @@ static char buffer[BUFSIZE];//全局变量默认初始化为0
 int main(int argc,char *argv[])
 {
 	using namespace std;
-	char *array=new (buffer) char[10];
+	char *array=new (buffer) char[10]; //只是返回了buffer的首地址（经过强制类型转换）
 	for(size_t i=0;i<10;++i)
 	{
 		array[i]='a'+i;
@@ -24,7 +24,7 @@ int main(int argc,char *argv[])
 
 	cout<<"Global Buffer:"<<buffer<<endl;
 
-  delete []array;
+        //delete []array; 说明：buffer为静态内存数据区，不属于delete的管辖范围
   
 	return 0;
 }
