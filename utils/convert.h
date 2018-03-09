@@ -7,6 +7,9 @@
 #include <time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <stdlib.h> 
+#include <math.h> 
+
 
 using std::string;
 
@@ -64,7 +67,7 @@ public:
 	}  
 
 	/* param @macstr: char str[18],@machex: char mac[6] */
-	static int mac_str2bin( char *str,unsigned char *mac)
+	static int mac_str2bin(const char *str,unsigned char *mac)
 	{  
 		for (int i = 0;i < 6;++i)  
 		{  
@@ -74,15 +77,34 @@ public:
 	}  
 
 	/* param &ip:char ip[16]; */
-	static unsigned int ip_str2int(const char *ipaddr)
+	static unsigned int ip_str2int(const char *ipstr)
 	{
-		return inet_addr(ipaddr);	
+		//return ntohl(inet_addr(ipaddr));	
+		if (ipstr == NULL) return 0; 
+
+		unsigned int i = 3, total = 0, cur; 
+		char *str=const_cast<char *>(ipstr);
+		char *token = strtok(str, "."); 
+
+		while (token != NULL) 
+		{ 
+			cur = atoi(token); 
+			if (cur >= 0 && cur <= 255) 
+			{ 
+				total += cur * pow(256, i); 
+			}
+ 
+			i --; 
+			token = strtok(NULL, "."); 
+		} 
+
+		return total; 
 	}
 
 	static string ip_int2str(const unsigned int &ip)
 	{
 		char temp[16]={0};
-		unsigned int v=ntohl(ip);
+		unsigned int v=ip;//ntohl(ip);
 		sprintf(temp, "%d.%d.%d.%d",  
 				(v & 0xff000000) >> 24,  
 				(v & 0x00ff0000) >> 16,  
