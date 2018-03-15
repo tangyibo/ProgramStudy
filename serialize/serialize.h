@@ -224,7 +224,7 @@ public:
 	
 		for(int i=0;i<len;++i)
 		{
-			BisicType item;
+			BasicType item;
 			int size=::deserialize(str,item);
 			str=str.substr(size);
 			a.push_back(item);
