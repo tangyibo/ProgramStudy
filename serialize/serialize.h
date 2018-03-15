@@ -177,8 +177,8 @@ public:
 		return *this;
 	}
 
-	template<typename BisicType>
-	OutStream& operator << (std::vector<BisicType>& a)
+	template<typename BasicType>
+	OutStream& operator << (std::vector<BasicType>& a)
 	{
 		int len=a.size();
 		std::string x=::serialize(len);
@@ -215,8 +215,8 @@ public:
 		return *this;
 	}
 
-	template<typename BisicType>
-	InStream& operator >> (std::vector<BisicType>& a)
+	template<typename BasicType>
+	InStream& operator >> (std::vector<BasicType>& a)
 	{
 		int len=0;
 		int ret=::deserialize(str,len);
