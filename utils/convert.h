@@ -9,13 +9,61 @@
 #include <arpa/inet.h>
 #include <stdlib.h> 
 #include <math.h> 
-
+#include <stdint.h>
 
 using std::string;
 
 class Convert
 {
 public:
+	static uint16_t swap_2(uint16_t v)
+	{
+		uint8_t arr[2];
+		memcpy(arr,&v,2);
+		uint8_t byte;
+
+		byte = arr[0];
+		arr[0] = arr[1];
+		arr[1] = byte;
+		return *(uint16_t*)arr;	
+	}
+
+	static uint32_t swap_4(uint32_t v)
+	{
+		uint8_t arr[4];
+		memcpy(arr,&v,4);
+		uint8_t byte;
+
+		byte = arr[0];
+		arr[0] = arr[3];
+		arr[3] = byte;
+
+		byte = arr[1];
+		arr[1] = arr[2];
+		arr[2] = byte;
+
+		return *(uint32_t*)arr;
+	}
+
+	static uint64_t swap_8(uint64_t v)
+	{
+		uint32_t low = (uint32_t) (v & 0x00000000FFFFFFFFLL);
+		uint32_t high = (uint32_t) ((v & 0xFFFFFFFF00000000LL) >> 32);
+
+		low = swap_4(low);
+		high = swap_4(high);
+
+		return  (uint64_t) high + (((uint64_t) low) << 32);
+	}
+
+	static bool is_little_endian()
+	{
+		int temp=1;
+		uint8_t byte_order=((uint8_t *)&temp)[0];
+		return (byte_order==1);
+	}
+
+
 	/*param @mac : char mac[6]; */
 	static string mac_bin2str(const unsigned char *mac)
 	{
@@ -67,7 +115,7 @@ public:
 	}  
 
 	/* param @macstr: char str[18],@machex: char mac[6] */
-	static int mac_str2bin(const char *str,unsigned char *mac)
+	static void mac_str2bin(const char *str,unsigned char *mac)
 	{  
 		for (int i = 0;i < 6;++i)  
 		{  
@@ -79,7 +127,7 @@ public:
 	/* param &ip:char ip[16]; */
 	static unsigned int ip_str2int(const char *ipstr)
 	{
-		//return ntohl(inet_addr(ipaddr));	
+		//return inet_addr(ipaddr);	
 		if (ipstr == NULL) return 0; 
 
 		unsigned int i = 3, total = 0, cur; 
@@ -98,13 +146,24 @@ public:
 			token = strtok(NULL, "."); 
 		} 
 
+		if(is_little_endian())
+			total=swap_4(total);
+		
 		return total; 
 	}
 
 	static string ip_int2str(const unsigned int &ip)
 	{
+		//struct sockaddr_in addr; 
+		//addr.sin_addr.s_addr = htonl(ip); 
+		//return string(inet_ntoa(addr.sin_addr));	
+
 		char temp[16]={0};
-		unsigned int v=ip;//ntohl(ip);
+		unsigned int v=ip;
+
+		if(is_little_endian())
+			v=swap_4(v);
+
 		sprintf(temp, "%d.%d.%d.%d",  
 				(v & 0xff000000) >> 24,  
 				(v & 0x00ff0000) >> 16,  
