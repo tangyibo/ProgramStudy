@@ -1,0 +1,6 @@
+wget wget https://sourceforge.net/projects/boost/files/boost/1.54.0/boost_1_54_0.tar.gz  --no-check-certificate
+tar zxvf boost_1_54_0.tar.gz
+cd boost_1_54_0
+./bootstrap.sh 
+./b2 --prefix=/usr/
+./b2 install
