@@ -1,0 +1,6 @@
+muduo/
+*.suo
+*.user
+*.sdf
+*.opensdf
+vs2012/Debug/
