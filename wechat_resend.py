@@ -15,7 +15,7 @@ from itchat.content import *
 # 要监测的群名称A
 from_group_name = '晨晨妈团购省钱帮'
 # 监测A群中指定昵称的人B（不能是自己）
-from_group_user = '庚麒0投资创业'
+from_group_user = '我爱0投资创业'
 # 要讲A群中的人B 转发的目的群
 to_group_name = '测试转发群'
 
