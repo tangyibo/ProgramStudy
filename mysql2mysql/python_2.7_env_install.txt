@@ -1,0 +1,65 @@
+========================================          
+		  <<环境配置说明>>
+========================================
+1、安装python2.7
+（1）安装openssl
+sudo yum install openssl-devel
+
+(2) 下载解压
+wget https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz
+tar -zxvf Python-2.7.10.tgz
+cd Python-2.7.10
+（3）修改
+#修改Setup.dist文件
+vi /usr/software/Python-2.7.5/Modules/Setup.dist
+#修改结果如下：
+# Socket module helper for socket(2)
+_socket socketmodule.c timemodule.c
+
+# Socket module helper for SSL support; you must comment out the other
+# socket line above, and possibly edit the SSL variable:
+SSL=/usr/local/ssl
+_ssl _ssl.c \
+-DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+-L$(SSL)/lib -lssl -lcrypto
+
+(4)编译
+./configure
+make all
+make install
+make clean
+make distclean
+
+2、安装pip工具
+(1)安装setuptools
+wget https://bootstrap.pypa.io/ez_setup.py
+sudo /usr/local/bin/python ez_setup.py install
+(2)安装pip
+wget https://files.pythonhosted.org/packages/ae/e8/2340d46ecadb1692a1e455f13f75e596d4eab3d11a57446f08259dee8f02/pip-10.0.1.tar.gz
+tar -zxvf pip-10.0.1.tar.gz
+cd pip-10.0.1
+sudo /usr/local/bin/python setup.py install
+
+3、安装cx_oracle模块
+
+（1）到oracle官方如下的URL地址下载oracle客户端和devel包
+下载地址：http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+
+instantclient-basiclite-linux.x64-11.2.0.4.0.zip
+instantclient-sdk-linux.x64-11.2.0.4.0.zip
+
+（2）解压这两个文件到/opt/instantclient_11_2目录下
+设置环境变量
+export ORACLE_HOME=/opt/instantclient_11_2/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
+
+安装cx_Oracle之前需要先建立一个链接libclntsh.so，如下：
+cd /opt/instantclient_11_2/
+ln -s libclntsh.so.11.1 libclntsh.so
+
+（3）执行安装
+sudo /usr/local/bin/pip install cx_Oracle
+
+4、安装requests模块(支持https)
+
+sudo /usr/local/bin/pip install requests[security]
