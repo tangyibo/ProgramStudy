@@ -1,7 +1,8 @@
 mysql2mysql
 ============
-mysql数据据跨库拷贝到mysql数据库小工具
+mysql数据库表跨库拷贝到mysql数据库小工具
 
-orable2mysql
+oracle2mysql
 ============
+oracle数据库表拷贝到mysql数据库小工具
 https://blog.csdn.net/cetrinw/article/details/51386441
