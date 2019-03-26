@@ -654,8 +654,3 @@ http://bigbully.github.io/Dapper-translation/
 http://twitter.github.io/zipkin/
 代码托管：
 https://github.com/twitter/zipkin/
-
-作者：Albert陈凯
-链接：https://www.jianshu.com/p/72bbd29a3aee
-来源：简书
-简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
