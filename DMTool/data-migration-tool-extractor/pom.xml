@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.weishao</groupId>
+		<artifactId>data-migration-tool-parent</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<artifactId>data-migration-tool-extractor</artifactId>
+	<name>data-migration-tool-extractor</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<kettle.version>6.1.0.1-196</kettle.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.weishao</groupId>
+			<artifactId>data-migration-tool-core</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		
+		<!-- kettle -->
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-core</artifactId>
+			<version>${kettle.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/kettle-core-${kettle.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-engine</artifactId>
+			<version>${kettle.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/kettle-engine-${kettle.version}.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>metastore</artifactId>
+			<version>${kettle.version}</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/kettle-core-${kettle.version}.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-vfs2</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>pentaho-nexus</id>
+			<url>https://nexus.pentaho.org/content/groups/omni/</url>
+			<snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+		</repository>
+	</repositories>
+
+</project>
