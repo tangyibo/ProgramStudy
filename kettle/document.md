@@ -12,17 +12,17 @@
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
 			<artifactId>kettle-core</artifactId>
-			<version>6.1.0.1-196</version>
+			<version>8.3.0.0-225</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
 			<artifactId>kettle-engine</artifactId>
-			<version>6.1.0.1-196</version>
+			<version>8.3.0.0-225</version>
 		</dependency>
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>metastore</artifactId>
-			<version>6.1.0.1-196</version>
+			<version>8.3.0.0-225</version>
 		</dependency>
 ```
 ### (2) 仓库
