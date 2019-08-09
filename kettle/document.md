@@ -7,7 +7,7 @@
 - https://github.com/pentaho/pentaho-kettle/releases/tag/8.3.0.3-RC
 
 ## 3、pom.xml配置
-###(1) 依赖
+### (1) 依赖
 ```
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
