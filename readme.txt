@@ -1,6 +1,6 @@
-#Program-Study 基础知识温习
+# Program-Study 基础知识温习
 
-#一、内容
+# 一、内容
 
 (1) reflect 反射
 
@@ -12,13 +12,17 @@
 
 (5) 协程
 
-#二、编程语言 
+# 二、编程语言 
 
  (1) c++
 
  (2) python
  
  
-#三、编码规范
+# 三、编码规范
 （1）google的C++编码规范
   http://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/naming/
+
+
+下载POM文件中的依赖：
+> mvn -f pom.xml dependency:copy-dependencies
