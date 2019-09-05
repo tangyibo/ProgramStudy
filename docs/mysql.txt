@@ -1,0 +1,89 @@
+1、设置帐号密码过期：
+	ALTER USER zzzz PASSWORD EXPIRE;
+
+2、MySQL查看最大连接数和修改最大连接数
+
+（1）、查看最大连接数
+	show variables like '%max_connections%';
+（2）、修改最大连接数
+	set GLOBAL max_connections = 200;
+
+FAQ：https://blog.csdn.net/jeikerxiao/article/details/86669935
+
+3、MySQL的慢查询
+（1）my.conf配置文件中的配置
+	slow_query_log : 无效(0或者OFF)、有效(1或者ON)
+	slow_query_log_file ： 指定日志文件
+	long_query_time ： 超过指定时间的SQL会记录到日志文件(默认时间为10秒)
+
+	----------------------------------------------------------------------
+	# vi /etc/my.cnf
+	[mysqld]
+	…
+	slow_query_log = 1
+	slow_query_log_file = /data/log/mysql/slow_query.log
+	long_query_time = 5
+	----------------------------------------------------------------------
+
+（2）使用set global
+
+	# mysql -u<用户名> -p <数据库名>
+	Enter password: [输入密码]
+
+	set global slow_query_log = 1;
+	set global slow_query_log_file = ‘/data/log/mysql/slow_query.log';
+	set global long_query_time = 5;
+
+4、查看MySQL当前的连接信息
+（1）show processlist / show full processlist
+     是显示用户正在运行的线程，需要注意的是，除了 root 用户能看到所有正在运行的线程外，其他用户都只能看到自己正在运行的线程，看不到其它用户正在运行的线程。
+（2）information_schema.processlist
+   show processlist 显示的信息都是来自MySQL系统库 information_schema 中的 processlist 表。所以使用下面的查询语句可以获得相同的结果：
+   select * from information_schema.processlist
+   
+   
+5、MySQL服务性能分析
+  MySQL服务器的性能通常通过监控命令查看系统工作状态，确定哪些因素成为瓶颈。
+ （1）  SHOW GLOBAL STATUS
+	显示了目前MySQL的工作状态，包含很多参数，下面对一些参数进行说明，其余的参考官方说明：
+	====================================
+	1. Aborted_clients
+	如果该值随时间增加，检查是否优雅关闭连接，检查max_allowed_packet配置变量是否被超过导致强制中断。
+	2. Aborted_connections
+	接近于0，检查网络问题，如果有少量是正常的，比如鉴权失败等。
+	3. Binlog_cache_disk_use和Binlog_cache_use
+	大部分事务应该在缓冲中进行，如果disk cache很大，可考虑增加内存缓存。
+	4. Bytes_recevied和Bytes_sent
+	如果值很大，检查是否查询超过需要的数据。
+	5. Com_*
+	尽量让如Com_rollback这些不常见的变量超过预期，用innotop检查。
+	6. Create_tmp_tables
+	优化查询降低该值。
+	7. Handler_read_rnd_next
+	Handler_read_rnd_next / Handler_read_rnd显示全表扫面大致平均值，如果很大，只能优化查询。
+	8. Open_files
+	不应该接近于open_files_limit，如果接近就应该适当增加open_files_limit。
+	9. Qcache_*
+	查询缓存相关。
+	10. Select_full_join
+	全联接无索引联接，尽量避免，优化查询。
+	11. Select_full_range_join
+	值过高说明使用了范围查询联接表，范围查询比较慢，可优化。
+	12. Sort_meger_passes
+	如果值较大可考虑增加sort_buffer_size，查明是那个查询导致使用文件排序。
+	13. Table_locks_waited
+	表被锁定导致服务器锁等待，InnoDB的行锁不会使得该变量增加，建议开启慢查询日志。
+	14. Threads_created
+	如果值在增加，可考虑增加thread_cache_size。
+	====================================
+
+（2）SHOW ENGINE INNODB STATUS
+	暂时的数据包含了太多InnoDB核心信息，并且需要比较深的了解InnoDB引擎工作原理，这里不做过多说明，请查阅针对此的专项文档。
+注: 通常包含SEMAPHORES、TRANSACTIONS、FILE I/O、LOG、BUFFER POOL AND MEMORY等一些详细值，有些参数是上一次执行以来的平均值，所以建议隔一段时间再打印一次得到这段时间的统计，有点类似iostat的统计磁盘平均读写一样。
+
+6、MySQL中的open_files_limit
+	open_files_limit 是mysql中的一个全局变量且不可动态修改。它控制着mysqld进程能使用的最大文件描述(FD)符数量。
+	URL地址：https://blog.csdn.net/Mount565/article/details/80842036
+	
+
+	
