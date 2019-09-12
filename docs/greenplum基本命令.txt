@@ -1,0 +1,193 @@
+ Greenplum数据库基本命令
+ 
+ 1、psql登录服务器
+[gpadmin@mdw ~]$ psql -d study
+psql (8.3.23)
+Type "help" for help.
+
+study=# 
+
+2、查看集群的配置信息
+study=# select * from gp_segment_configuration ORDER BY hostname;
+ dbid | content | role | preferred_role | mode | status | port | hostname | address | replication_port 
+------+---------+------+----------------+------+--------+------+----------+---------+------------------
+    1 |      -1 | p    | p              | s    | u      | 5432 | mdw      | mdw     |                 
+    7 |       5 | p    | p              | s    | u      | 6005 | sdw1     | sdw1    |                 
+    2 |       0 | p    | p              | s    | u      | 6000 | sdw1     | sdw1    |                 
+    6 |       4 | p    | p              | s    | u      | 6004 | sdw1     | sdw1    |                 
+    3 |       1 | p    | p              | s    | u      | 6001 | sdw1     | sdw1    |                 
+    5 |       3 | p    | p              | s    | u      | 6003 | sdw1     | sdw1    |                 
+    4 |       2 | p    | p              | s    | u      | 6002 | sdw1     | sdw1    |                 
+   13 |      11 | p    | p              | s    | u      | 6005 | sdw2     | sdw2    |                 
+   12 |      10 | p    | p              | s    | u      | 6004 | sdw2     | sdw2    |                 
+   11 |       9 | p    | p              | s    | u      | 6003 | sdw2     | sdw2    |                 
+   10 |       8 | p    | p              | s    | u      | 6002 | sdw2     | sdw2    |                 
+    9 |       7 | p    | p              | s    | u      | 6001 | sdw2     | sdw2    |                 
+    8 |       6 | p    | p              | s    | u      | 6000 | sdw2     | sdw2    |                 
+(13 rows)
+
+
+3、查看所有数据库
+study=# select datname,pg_size_pretty(pg_database_size(datname)) from pg_database;
+  datname  | pg_size_pretty 
+-----------+----------------
+ template1 | 136 MB
+ template0 | 135 MB
+ postgres  | 136 MB
+ tester    | 135 MB
+ develop   | 135 MB
+ study     | 136 MB
+(6 rows)
+
+或者：
+study=# \l
+                      List of databases
+   Name    |  Owner  | Encoding |      Access privileges      
+-----------+---------+----------+-----------------------------
+ develop   | gpadmin | UTF8     | =Tc/gpadmin                 
+                                : gpadmin=CTc/gpadmin         
+                                : smartdm_dev=T*c*/gpadmin
+ postgres  | gpadmin | UTF8     | 
+ study     | gpadmin | UTF8     | =Tc/gpadmin                 
+                                : gpadmin=CTc/gpadmin         
+                                : study=C*Tc/gpadmin
+ template0 | gpadmin | UTF8     | =c/gpadmin                  
+                                : gpadmin=CTc/gpadmin
+ template1 | gpadmin | UTF8     | =c/gpadmin                  
+                                : gpadmin=CTc/gpadmin
+ tester    | gpadmin | UTF8     | =Tc/gpadmin                 
+                                : gpadmin=CTc/gpadmin         
+                                : smartdm_test=C*T*c*/gpadmin
+(6 rows)
+
+4、使用`\c`命令切换数据库
+# ---------------------------------------------------------
+postgres=# \c resdata
+
+5、查看版本
+study=# select version();
+                                                                                               version                                                                                                
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 8.3.23 (Greenplum Database 5.21.2 build commit:610b6d777436fe4a281a371cae85ac40f01f4f5e) on x86_64-pc-linux-gnu, compiled by GCC gcc (GCC) 6.2.0, 64-bit compiled on Aug  7 2019 20:38:47
+(1 row)
+
+
+6、查看数据分布情况 
+	如数据分布不均匀，将发挥不了并行计算的优势，严重影响性能。  
+study=# select gp_segment_id,count(*) from  tangyibo.v_js_grtxsj  group by 1 ;
+ gp_segment_id | count 
+---------------+-------
+             9 |   817
+             2 |   778
+             8 |   754
+             3 |   807
+             7 |   765
+            11 |   785
+             4 |   736
+            10 |   751
+             0 |   763
+             5 |   738
+             1 |   753
+             6 |   792
+(12 rows)
+
+	
+7、查看服务器的参数列表
+	study=# show all;
+	详细说明：https://cloud.tencent.com/developer/article/1480070
+	
+8、查看表的结构
+study=# \d tangyibo.v_js_grtxsj;
+        Table "tangyibo.v_js_grtxsj"
+ Column |          Type          | Modifiers 
+--------+------------------------+-----------
+ GH     | character varying(20)  | not null
+ YZBM   | character varying(6)   | 
+ TXDZ   | character varying(180) | 
+ DH     | character varying(30)  | 
+ DZXX   | character varying(40)  | 
+ YDDH   | character varying(30)  | 
+ DH2    | character varying(30)  | 
+ YDDH2  | character varying(30)  | 
+ DZXX2  | character varying(40)  | 
+Distributed by: (GH)
+	
+9、查看库下的所有的schema与表
+(1)在终端上输入\dt再次按下TAB键即可出现schema的信息
+study-# \dt 
+gp_toolkit.          information_schema.  news_log             pg_bitmapindex.      pg_catalog.          pg_toast.            public.              tangyibo.            pg_aoseg.            
+study-# \dt tangyibo.
+                     List of relations
+  Schema  |         Name          | Type  | Owner | Storage 
+----------+-----------------------+-------+-------+---------
+ tangyibo | a_config_dict         | table | study | heap
+ tangyibo | a_config_dictdetail   | table | study | heap
+ tangyibo | a_config_officephone  | table | study | heap
+ tangyibo | a_config_sch_dict     | table | study | heap
+ tangyibo | a_datasync_task       | table | study | heap
+ tangyibo | a_datasync_task_log   | table | study | heap
+	
+(2)使用SQL方式查看
+study=# select * from information_schema.tables where table_schema='tangyibo';
+ table_catalog | table_schema |      table_name       | table_type | self_referencing_column_name | reference_generation | user_defined_type_catalog | user_defined_type_schema | user_defined_type_name | is_insertable_into | is_typed | commit_action 
+---------------+--------------+-----------------------+------------+------------------------------+----------------------+---------------------------+--------------------------+------------------------+--------------------+----------+---------------
+ study         | tangyibo     | a_config_dict         | BASE TABLE |                              |                      |                           |                          |                        | YES                | NO       | 
+ study         | tangyibo     | a_config_dictdetail   | BASE TABLE |                              |                      |                           |                          |                        | YES                | NO       | 
+ study         | tangyibo     | a_config_officephone  | BASE TABLE |                              |                      |                           |                          |                        | YES                | NO       | 
+ study         | tangyibo     | a_config_sch_dict     | BASE TABLE |                              |                      |                           |                          |                        | YES                | NO       | 
+
+10、查看当前正在执行的语句
+study=# select *  from gp_toolkit.gp_resq_priority_statement;
+ rqpdatname | rqpusename | rqpsession | rqpcommand | rqppriority | rqpweight |                       rqpquery                        
+------------+------------+------------+------------+-------------+-----------+-------------------------------------------------------
+ study      | gpadmin    |        170 |          3 | MAX         |   1000000 | select *  from gp_toolkit.gp_resq_priority_statement;
+(1 row)
+
+
+11、查看数据存放的路径	
+study=# select * from pg_filespace_entry;
+ fsefsoid | fsedbid |            fselocation             
+----------+---------+------------------------------------
+     3052 |       1 | /home/gpadmin/data/master/gpseg-1
+     3052 |       2 | /home/gpadmin/data/primary/gpseg0
+     3052 |       8 | /home/gpadmin/data/primary/gpseg6
+     3052 |       3 | /home/gpadmin/data/primary/gpseg1
+     3052 |       9 | /home/gpadmin/data/primary/gpseg7
+     3052 |       4 | /home/gpadmin/data/primary/gpseg2
+     3052 |      10 | /home/gpadmin/data/primary/gpseg8
+     3052 |       5 | /home/gpadmin/data/primary/gpseg3
+     3052 |      11 | /home/gpadmin/data/primary/gpseg9
+     3052 |       6 | /home/gpadmin/data/primary/gpseg4
+     3052 |      12 | /home/gpadmin/data/primary/gpseg10
+     3052 |       7 | /home/gpadmin/data/primary/gpseg5
+     3052 |      13 | /home/gpadmin/data/primary/gpseg11
+(13 rows)
+
+12、查看集群中那些节点挂了
+study=# select * from gp_segment_configuration where status = 'd';
+ dbid | content | role | preferred_role | mode | status | port | hostname | address | replication_port 
+------+---------+------+----------------+------+--------+------+----------+---------+------------------
+(0 rows)
+
+如果没有数据代表没有节点挂。
+
+13、查看当前的客户端连接信息
+postgres=# select * from pg_stat_activity;
+ datid | datname  | procpid | sess_id | usesysid | usename |                                                                                     current_query                                                                                     | waiting |          query_
+start          |         backend_start         |  client_addr  | client_port | application_name |          xact_start           | waiting_reason | rsgid | rsgname | rsgqueueduration 
+-------+----------+---------+---------+----------+---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------+----------------
+---------------+-------------------------------+---------------+-------------+------------------+-------------------------------+----------------+-------+---------+------------------
+ 16384 | study    |    8971 |      69 |    16385 | study   | <IDLE>                                                                                                                                                                                | f       | 2019-09-09 16:1
+3:27.903567+08 | 2019-09-09 15:58:58.679076+08 | 172.16.13.8   |       30384 |                  |                               |                |     0 | unknown | 
+ 16384 | study    |    8974 |      70 |    16385 | study   | <IDLE>                                                                                                                                                                                | f       | 2019-09-09 16:1
+3:27.924531+08 | 2019-09-09 15:58:59.914712+08 | 172.16.13.8   |       30385 |                  |                               |                |     0 | unknown | 
+ 12100 | postgres |   10197 |      84 |       10 | gpadmin | select * from pg_stat_activity;                                                                                                                                                       | f       | 2019-09-09 16:2
+2:34.443229+08 | 2019-09-09 16:22:09.524327+08 |               |          -1 | psql             | 2019-09-09 16:22:34.443229+08 |                |     0 | unknown | 
+ 16384 | study    |    9599 |      82 |    16385 | study   | INSERT INTO tangyibo.jw_cjb (XH, xq, xkkh, cj, xf, jd, zscj, xn, pscj, bkcj, cxcj, kcmc, xm, kcxz) VALUES ( $1,  $2,  $3,  $4,  $5,  $6,  $7,  $8,  $9,  $10,  $11,  $12,  $13,  $14) | f       | 2019-09-09 16:2
+2:34.444974+08 | 2019-09-09 16:11:13.491115+08 | 172.16.90.160 |       23306 |                  | 2019-09-09 16:21:47.209844+08 |                |     0 | unknown | 
+(4 rows)
+
+
+
+
+
